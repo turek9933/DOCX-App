@@ -8,6 +8,7 @@ from pathlib import Path
 import zipfile
 import fileinput
 from time import sleep
+import sys
 
 #Definicja kolejnych funkcji
 
@@ -59,23 +60,23 @@ def create_dir(dir_path):
     if not os.path.exists(dir_path):
         os.mkdir(dir_path) 
 
+
+if len(sys.argv) < 3:
+    print("Prawidlowa forma wywolania programu: skrypt.py <schemat.docx> <dane.txt>")
+    sys.exit(1)
+
+certificate_name = sys.argv[1]
+data_name = sys.argv[2]
+
 #Pobranie katalogu, nazwy certyfikatu, nazwy pliku z danymi i ustalenie ilości danych
 cwd = os.path.dirname(__file__)
 sys_id = check_sys(cwd)
-print("Twoj folder to:")
-print(cwd)
-certificate_name = input("Podaj nazwę pliku .docx: ")
 certificate_name = check_docx(certificate_name)
-data_name = input("Podaj nazwę pliku z danymi .txt: ")
 data_name = check_txt(data_name)
 data_lines_count = how_much_numbers_file(cwd + sys_id + data_name)
 
 #Tworzymy folder, gdzie zapiszemy wszytkie nowe programy
 create_dir(cwd + sys_id + data_name.replace(".txt", ""))
-
-#Uśpienie na chwilkę programu i wyczyszczenie ekrany
-sleep(1)
-os.system('cls')
 
 #Przepakowanie z .docx do .zip i kopia document.xml
 shutil.copy(cwd + sys_id + certificate_name, cwd + sys_id + "temp.zip")
@@ -122,7 +123,6 @@ with fileinput.input(files = (cwd + sys_id + data_name)) as f_data:
         #Wyswietlamy obecny proces przez chwilę
         os.system('cls')
         show_process(line_count + 1, data_lines_count)
-        #sleep(1) TO DO
         #Iterujemy ilość linii, które przeszliśmy
         line_count += 1
 
