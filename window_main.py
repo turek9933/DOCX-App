@@ -7,21 +7,26 @@ import sys
 import os
 import subprocess
 
-
-# Function displaying selected files and segregating them into .txt and .docx lists
+# Wyświetla wybrane pliki oraz segreguje je na listy plików .txt i .docx
 def show_files(filez: tuple):
     print(filez)
     for i in filez:
+        print(i)
         if i.endswith('.txt'):
             txt_list.append(i[i.rfind('/') + 1:i.find('.txt')])
         elif i.endswith('.docx'):
             docx_list.append(i[i.rfind('/') + 1:i.find('.docx')])
+    if len(txt_list) != 0 and len(docx_list)!= 0:
+        delete_button('generate')
+        new_button('generate', 'button_main_generate.png', 738, 310)
+        b['generate'].config(command = lambda: [print('button generate: pressed!'), make_certificates()])
+        
 
-# Function opening a dialog window for file selection
+# Otwiera okno dialogowe do wybierania dokumentów
 def open_files():
     return askopenfilenames(filetypes = [('Word i dokumenty tekstowe', '*.docx *.txt')], title='NIE PATRZ NA KONIA!')
 
-# Function to clear the window of all elements except 'help'
+# Czyści okno ze wszystkich elementów poza 'help'
 def clear_window():
     for i in b:
         if not i == 'help':
@@ -30,15 +35,18 @@ def clear_window():
         if not i == '.DOCX-App':
             delete_label(i)
 
+# Uruchamia podproces certificate_maker.py, który generuje certyfikaty
 def make_certificates():
     print("TXT:")
     print(txt_list)
     print("DOCX:")
     print(docx_list)
-    subprocess.run(["python", "certificate_maker.py", docx_list[0], txt_list[0]], check=True)
+    try:
+        subprocess.run(["python", "certificate_maker.py", docx_list[0], txt_list[0]], check=True)
+    except (Exception) as e: 
+        print('Blad tworzenia certyfikatów: ', e)
 
-
-# Function transitioning to the documents section
+# Przeprowadza do widoku odpowiedzialnego za generowanie dokumentów
 def to_documents():
     delete_label('Cóż generujemy')
     delete_button('certyfikaty')
@@ -53,7 +61,7 @@ def to_documents():
     b['generate'].config(command = lambda: [print('button generate (not active): pressed!')])
     b['back_arrow'].config(command = lambda: [print('button back arrow: pressed!'), clear_window(), to_main()])
 
-# Function transitioning to the certificates section
+# Przeprowadza do widoku odpowiedzialnego za generowanie certyfikatów
 def to_certificates():
     delete_label('Cóż generujemy')
     delete_button('certyfikaty')
@@ -63,12 +71,12 @@ def to_certificates():
     new_label('txt', 'label_short_main.png', 40, 220, 'Pliki *.txt:')
     new_label('docx', 'label_short_main.png', 406, 220, 'Pliki *.docx:')
     new_button('choose file', 'button_main_choose.png', 738, 180)
-    b['choose file'].config(command = lambda: [print('button choose file: pressed!'), show_files(open_files()), make_certificates()])
+    b['choose file'].config(command = lambda: [print('button choose file: pressed!'), show_files(open_files()), ])
     new_button('generate', 'button_main_generate_not_active.png', 738, 310)
     b['generate'].config(command = lambda: [print('button generate: pressed!')])
     b['back_arrow'].config(command = lambda: [print('button back arrow: pressed!'), clear_window(), to_main()])
 
-# Function initializing the main view of the application
+# Inicjuje główny widok aplikacji
 def to_main():
     new_label('.DOCX-App', 'label_main.png', 40, 40, '.DOCX-App')
     new_label('Cóż generujemy', 'label_main.png', 240, 210, 'Cóż generujemy?')
@@ -96,7 +104,7 @@ def to_main():
         fill = names.color_font,
     )}
 
-# Function creating a new label
+# Tworzy nową etykietę na ekranie
 def new_label(label_name: str, file_name: str, x: float, y: float, label_text: str):
     l_i[label_name] = PhotoImage(file = names.relative_to_assets(file_name))
     #Label Image placement is referenced to the center of the object
@@ -109,7 +117,7 @@ def new_label(label_name: str, file_name: str, x: float, y: float, label_text: s
         fill = names.color_font,
     )
 
-# Function creating a new button
+# Tworzy nowy przycisk na ekranie
 def new_button(button_name: str, file_name: str, x: float, y: float):
     b_i[button_name] = PhotoImage(file = names.relative_to_assets(file_name))
     b[button_name] = Button(
@@ -124,19 +132,20 @@ def new_button(button_name: str, file_name: str, x: float, y: float):
     b[button_name].place(x = x, y = y)
     print(button_name + ': ' + str(x + b_i[button_name].width() / 2) + ', ' + str(y + b_i[button_name].height() / 2))
 
-# Function removing a label
+# Usuwa etykietę z ekrany o danej nazwie
 def delete_label(object_name: str):
     canvas.delete(l[object_name], l_b[object_name], l_i[object_name])
 
-# Function removing a button
+# Usuwa przycisk z ekrany o danej nazwie
 def delete_button(object_name: str):
     canvas.delete(b_i[object_name])
     b[object_name].destroy()
 
-# Size of the app window
+# Rozmiary głównego okienka aplikacji
 window_main_width = 1000
 window_main_height = 600
 
+# Biblioteki z elementami graficznymi oraz plikami niezbędnymi do działania
 l_i = {}# label images
 l_b = {}# label backgrounds
 l = {}# labels
@@ -144,15 +153,17 @@ b_i = {}# button images
 b = {}# buttons
 o_i = {}# others images
 o = {}# others
-txt_list = []# chosen .txt files with data
-docx_list = []# chosen .docx files with templates
+txt_list = []# .txt files
+docx_list = []# .docx files
 
+# Inicjacja okienka
 window_main = Tk()
 window_main.geometry(str(window_main_width) + 'x' + str(window_main_height))
 window_main.title('.DOCX-App')
-window_main.configure(background = names.color_background)# Setting the background color
-window_main.bind('<space>', sys.exit)#TODO Space is binded as key to end application 
+window_main.configure(background = names.color_background)
+window_main.bind('<space>', sys.exit)#TODO Spacja jest przypisana jako guzik wyłączający aplikację 
 
+# Stworzenie 'nadpudełka' aplikacji
 canvas = Canvas(
     window_main,
     background = names.color_background,
@@ -163,7 +174,9 @@ canvas = Canvas(
     relief = 'flat'
 )
 canvas.place(x = 0, y = 0)
-    
+
+# Inicjalizacja okienka głównego
 to_main()
 
+# Inicjalizacja pętli aplikacji
 window_main.mainloop()
