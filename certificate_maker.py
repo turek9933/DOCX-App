@@ -25,12 +25,11 @@ def check_txt(name):
         temp += '.txt'
     return temp
 #Funkcja zwraca znak systemu plików, tzn. "\" lub "/"
-def check_sys(cwd):
-    temp = str(cwd)
-    if temp.find('\\') != -1:
-        return '\\'
-    elif temp.find('/') != -1:
-        return '/'
+def check_sys():
+    if os.name == "nt":
+        return "\\"
+    else:
+        return "/"
 #Funkcja zwraca 10 znakowy wyraz składający się z jednakowej, danej cyfry
 def digit_word(n):
     i = 0
@@ -65,26 +64,36 @@ if len(sys.argv) < 3:
     print("Prawidlowa forma wywolania programu: skrypt.py <schemat.docx> <dane.txt>")
     sys.exit(1)
 
-certificate_name = sys.argv[1]
-data_name = sys.argv[2]
+certificate_name = os.path.join(sys.argv[1])
+data_name = os.path.join(sys.argv[2])
+
+if os.name == "nt":
+    certificate_name = certificate_name.replace("/", "\\")
+    data_name = data_name.replace("/", "\\")
 
 #Pobranie katalogu, nazwy certyfikatu, nazwy pliku z danymi i ustalenie ilości danych
 cwd = os.path.dirname(__file__)
-sys_id = check_sys(cwd)
-certificate_name = check_docx(certificate_name)
-data_name = check_txt(data_name)
-data_lines_count = how_much_numbers_file(cwd + sys_id + data_name)
+sys_id = check_sys()
+
+#TODO TO DELETE
+#certificate_name = check_docx(certificate_name)
+#data_name = check_txt(data_name)
+
+data_lines_count = how_much_numbers_file(data_name)
 
 #Tworzymy folder, gdzie zapiszemy wszytkie nowe programy
-create_dir(cwd + sys_id + data_name.replace(".txt", ""))
+create_dir(data_name.replace(".txt", ""))
 
 #Przepakowanie z .docx do .zip i kopia document.xml
-shutil.copy(cwd + sys_id + certificate_name, cwd + sys_id + "temp.zip")
-with zipfile.ZipFile(cwd + sys_id + "temp.zip") as zip_var:
-    zip_var.extractall(path = cwd + sys_id + "temp")    
+shutil.copy(certificate_name, os.path.join(certificate_name.replace(".docx", "temp.zip")))
+
+#Wypakowanie z .zip do folderu o nazwie temp, który znajduje się w katalogu dokumentu .docx
+with zipfile.ZipFile(os.path.join(certificate_name.replace(".docx", "temp.zip"))) as zip_var:
+    zip_var.extractall(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp"))
 
 #Kopiowanie orginalnego document.xml w celu jego przeszukiwania i zastępowania
-shutil.copy(cwd + sys_id + "temp" + sys_id + "word" + sys_id + "document.xml", cwd + sys_id + "document_original.xml")
+shutil.copy(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp", "word", "document.xml"),
+        os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "document_original.xml"))
 
 #Klucz całego programu:
 #Bierzemy plik z danymi (data_name) i działamy z kolejnymi członami w liniach (oddzielonymi tabulatorem).
@@ -93,7 +102,7 @@ shutil.copy(cwd + sys_id + "temp" + sys_id + "word" + sys_id + "document.xml", c
 #Znalezione luki zastępujemy kolejnymi członami z pliku z danymi (data_name)
 
 #Otwarcie pliku z danymi (dana_name)
-with fileinput.input(files = (cwd + sys_id + data_name)) as f_data:
+with fileinput.input(files = (data_name)) as f_data:
     #Zapisujemy też numer linii, na której działamy
     line_count = 0
     #Idziemy po każdej lini z pliku, będziemy zamieniać wyrazy i tworzyć nowe pliki .docx
@@ -106,9 +115,9 @@ with fileinput.input(files = (cwd + sys_id + data_name)) as f_data:
         index = 0
 
         #Otwieramy orginalny plik .xml (document_original.xml) i szukamy kolejnych luk do zastąpienia
-        with fileinput.FileInput(files=(cwd + sys_id + "document_original.xml")) as f_docx_read:
+        with fileinput.FileInput(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "document_original.xml")) as f_docx_read:
             #Otwieramy plik .xml w folderze do nadpisania go nowymi danymi 
-            with open(cwd + sys_id + "temp" + sys_id + "word" + sys_id + "document.xml", 'w') as f_docx_write:
+            with open(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp", "word", "document.xml"), "w") as f_docx_write:
                 #Przechodimy przez linie pliku orginalnego (document_original.xml), szukając kolejnych luk (10 cyfr), zastępując je kolejnymi danymi (data_line_splited[index])
                 #Tak zastąpionymi liniami nadpisujemy plik w folderze tymczasowym 
                 for line in f_docx_read:
@@ -119,7 +128,6 @@ with fileinput.input(files = (cwd + sys_id + data_name)) as f_data:
                         char_code_numer += 1
                         index += 1
                     f_docx_write.write(temp_line)
-        
         #Wyswietlamy obecny proces przez chwilę
         os.system('cls')
         show_process(line_count + 1, data_lines_count)
@@ -127,16 +135,19 @@ with fileinput.input(files = (cwd + sys_id + data_name)) as f_data:
         line_count += 1
 
         #Zwijamy plik tymczasowy (temp) do archiwum .zip z nową nazwą (new_docx_name)
-        shutil.make_archive(cwd + sys_id + new_docx_name, 'zip', cwd + sys_id + "temp")
+        shutil.make_archive(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), new_docx_name),
+                            "zip", 
+                            os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp"))
         #Kopiujemy nowe archiwum .zip do folderu, gdzie gromadzimy wszystkie zastąpione pliki (data_name) oraz zmieniamy format archiwum z .zip na .docx
-        shutil.copy(cwd + sys_id + new_docx_name + ".zip", cwd + sys_id + data_name.replace(".txt", "") + sys_id + new_docx_name + ".docx")
+        shutil.copy(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), new_docx_name + ".zip"),
+                    os.path.join(data_name.replace(".txt", ""), new_docx_name + ".docx"))
         #Usuwamy zbędne już archiwum .zip
-        os.remove(cwd + sys_id + new_docx_name + ".zip")
+        os.remove(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), new_docx_name + ".zip"))
 
 #Usunięcie wypakowanego orginalego pliku .xml (document_original.xml), całego wypakowanego folderu tymczasowego (temp/*) oraz archiwum tymczasowego (temp.zip)
-os.remove(cwd + sys_id + "document_original.xml")
-shutil.rmtree(cwd + sys_id + "temp")
-os.remove(cwd + sys_id + "temp.zip")
+os.remove(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "document_original.xml"))
+shutil.rmtree(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp"))
+os.remove(os.path.join(certificate_name.replace(".docx", "temp.zip")))
 
 #Komunikat końcowy
 os.system('cls')
