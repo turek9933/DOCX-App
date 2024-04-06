@@ -60,7 +60,7 @@ def create_dir(dir_path):
         os.mkdir(dir_path) 
 
 
-if len(sys.argv) < 3:
+if len(sys.argv) != 3:
     print("Prawidlowa forma wywolania programu: skrypt.py <schemat.docx> <dane.txt>")
     sys.exit(1)
 
