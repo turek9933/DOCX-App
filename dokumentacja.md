@@ -3,11 +3,11 @@ Tomasz Turek
 v. 1.0
 
 ## Informacje ogólne
-Aplikajca traktuje o manipulowaniu dokumentami w formacie .docx według ustalonych funkcjonalności.\
+Aplikajca traktuje o manipulowaniu dokumentami w formacie .docx według ustalonych funkcjonalności.
 Umożliwia ona:
-- generowanie certyfikatów, czyli ciągu dokumentów o identycznych lukach uzupełnianych z plików tekstowych;\
-- generowanie dokumentów, czyli zbioru różnych dokumentów z lukami do uzupełnienia różnymi, ale znanymi danymi z plików tekstowych;\
-- konwertowanie plików z formatu .docx na format .pdf;\
+- generowanie certyfikatów, czyli ciągu dokumentów o identycznych lukach uzupełnianych z plików tekstowych;
+- generowanie dokumentów, czyli zbioru różnych dokumentów z lukami do uzupełnienia różnymi, ale znanymi danymi z plików tekstowych;
+- konwertowanie plików z formatu .docx na format .pdf;
 - prostą edycję plików tekstowych.
 
 Składa się z 4 głównych modułów.
