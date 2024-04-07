@@ -7,24 +7,24 @@ Aplikajca traktuje o manipulowaniu dokumentami w formacie .docx według ustalony
 Składa się z 4 głównych modułów.
 
 ## Generowanie dokumentów
-Funkcjonalność, która wymaga dwóch plików:
-- dokumentu w formacie .docx - A (tych plików może być więcej);
-- dokumentu w formacie .txt - B.
-Intuicja jest następująca - Plik A jest szablonem, występują w nim luki, które można łatwo, mechanicznie uzupełniać kolejnymi danymi.
+Funkcjonalność, która wymaga dwóch plików:\
+- dokumentu w formacie .docx - A (tych plików może być więcej);\
+- dokumentu w formacie .txt - B.\
+Intuicja jest następująca - Plik A jest szablonem, występują w nim luki, które można łatwo, mechanicznie uzupełniać kolejnymi danymi.\
 Niestety zstawów danych do uzupełnienia jest dużo, więcej niż byłoby sensownie je uzupełniać samemu.
 Funcjonalność odpowiada za wykonywanie tego. Jest ona przydatna np. kiedy potrzebujemy stworzyć zestawy podobnych dokumentów, które zawierają poniekąd podobne dane (jak np. daty wystawienia).
 Plik A zawiera luki, które są odpowiedno oznaczone. Plik B zawiera oznaczenia oraz wartości, które mają się znaleźć w lukach.
 
-Przykładowe użycie:
-Plik A:
-> Dokument wykonano dnia: {Date}
-> Osoba odpowiedzialna: {Person}
-Plik B:
-> {Date};;;04 marca 2024r.
-> {Person};;;Adam Nowak
-Moduł uzupełni dane i wygeneruje nową kopię pliku A. W tym przypadku będzie wyglądała ona tak:
-> Dokument wykonano dnia: 04 marca 2024r.
-> Osoba odpowiedzialna: Adam Nowak
+Przykładowe użycie:\
+Plik A:\
+> Dokument wykonano dnia: {Date}\
+> Osoba odpowiedzialna: {Person}\
+Plik B:\
+> {Date};;;04 marca 2024r.\
+> {Person};;;Adam Nowak\
+Moduł uzupełni dane i wygeneruje nową kopię pliku A. W tym przypadku będzie wyglądała ona tak:\
+> Dokument wykonano dnia: 04 marca 2024r.\
+> Osoba odpowiedzialna: Adam Nowak\
 
 ## Generowanie certyfikatów
 Funkcjonalność, która wymaga dwóch plików:
