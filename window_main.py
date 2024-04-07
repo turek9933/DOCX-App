@@ -13,9 +13,9 @@ def show_files(filez: tuple):
     for i in filez:
         print(i)
         if i.endswith('.txt'):
-            txt_list.append(i[i.rfind('/') + 1:i.find('.txt')])
+            txt_list.append(i)
         elif i.endswith('.docx'):
-            docx_list.append(i[i.rfind('/') + 1:i.find('.docx')])
+            docx_list.append(i)
     if len(txt_list) != 0 and len(docx_list)!= 0:
         delete_button('generate')
         new_button('generate', 'button_main_generate.png', 738, 310)
@@ -26,7 +26,7 @@ def show_files(filez: tuple):
 def open_files():
     return askopenfilenames(filetypes = [('Word i dokumenty tekstowe', '*.docx *.txt')], title='NIE PATRZ NA KONIA!')
 
-# Czyści okno ze wszystkich elementów poza 'help'
+# Czyści okno ze wszystkich elementów poza 'help' i '.DOCX-App'
 def clear_window():
     for i in b:
         if not i == 'help':
