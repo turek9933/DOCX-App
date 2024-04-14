@@ -2,9 +2,21 @@
 Tomasz Turek
 v. 1.0
 
+## Spis treści
+
+1. [Informacje ogólne](#informacje-ogólne)
+2. [Generowanie dokumentów](#generowanie-dokumentów)
+3. [Generowanie certyfikatów](#generowanie-certyfikatów)
+4. [Konwersja na pdf-y](#konwersja-na-pdf-y)
+5. [Edytor tekstowy](#edytor-tekstowy)
+6. [Pozostałe możliwości](#pozostałe-możliwości)
+7. [Czasochłonność projektu](#czasochłonność-projektu)
+8. [Plan realizacji projektu](#plan-realizacji-projektu)
+
+
 ## Informacje ogólne
-Aplikajca traktuje o manipulowaniu dokumentami w formacie .docx według ustalonych funkcjonalności.
-Umożliwia ona:
+Aplikacja traktuje o manipulowaniu dokumentami w formacie .docx według ustalonych funkcjonalności. Zostanie stworzona w języku Python, dostępna będzie na platformę Windows. (W przyszłości, przy łatwej portacji, zostanie opracowana również wersja na Linux-a.)
+Aplikacja umożliwia:
 - generowanie certyfikatów, czyli ciągu dokumentów o identycznych lukach uzupełnianych z plików tekstowych;
 - generowanie dokumentów, czyli zbioru różnych dokumentów z lukami do uzupełnienia różnymi, ale znanymi danymi z plików tekstowych;
 - konwertowanie plików z formatu .docx na format .pdf;
@@ -91,3 +103,57 @@ W ustawieniach można również:
 
 ### Błędy
 Błędy lub nieprawidłowo podane dane będą generować okienko dialogowe z wypisanymi informacjami o potencjalnym źródle problemu.
+
+## Czasochłonność projektu
+
+Szacowany czas wykonania projektu od początku do końca wynosi od 4 do 8 tygodni. Rozstrzał wynika z jednoosobowego wykonania, potrzeby lepszego poznania technologii do zastosowania, a także z podejścia polegającego na dozowaniu pracy w celu utrzymania zainteresowania projektem.\
+Projekt zatem powinien trwać od 4 do 8 tygodnii, przy pracy jednej osoby, w nakładzie 4-5 dni w tygodniu przez 3-5 h dziennie.
+
+### Wymagane zasoby
+
+Zasoby wymagane do realizacji projektu można podzielić na dwa rodzaje: sprzętowe i ludzie.
+
+Zasoby sprzętowe niezbędne do realizacji projektu to przede wszystkim komputery:
+- obsługujące środowiska programistyczne w języku Python, z uwzględnieniem biblioteki Tkinter;
+- mające dostęp do systemu kontroli wersji (Git i GitHub).
+
+Dodatkowo niezbędne do pracy w zespole są ścieżki komunikacji oraz przekazywania informacji. (Aczkolwiek nie w przypadku tego jednoosobowego projektu.)
+
+Zasoby ludzkie niezbędne do realizacji projektu to osoby mające wiedzę i/lub praktykę w:
+- obsłudze języka Python w kontekście działania na plikach;
+- obsłudze biblioteki Tkinter, na której bazuje frontend aplikacji;
+- integracji elementów back- oraz front-end-owych;
+- przeprowadzaniu testów aplikacji oraz ocenianiu odczuć użytkownika.
+
+Wobec powyższych wymagań optymalny wydaje się podział na zespół 2 lub 3 osobowy, gdzie występują podziały obowiązków.
+
+Wariant 3 osobowy:
+- programista obsługujący pracę modułów w backend-zie oraz przeprowadzający testy modularne;
+- programista projektujący wygląd, obsługę aplikacji dla użytkownika, przeprowadzający wstępne testy użytkownicze;
+- koordynator pracy, odpowiedzialny za intergację modułów z wyglądem aplikacji.
+
+W wariancie 2 osobowym funkcja koordynator mógłby zostać podzielona na dwóch programistów, którzy symultanicznie konsultowaliby stan projektu, nakreślali cele i poświęcali czas na sprawdzanie dotyczasowej integracji modułów.
+
+W przypadku tego projektu sam łącze owe funkcje.
+
+## Plan realizacji projektu
+
+![Plan realizacji projektu](./Plan.png)
+
+Powyższy plan obrazuje schematycznie założenia realizacji kolejnych etapów. Został on rozpisany na 6 tygodni, a "wyblakłe" elementy wskazują na elementy realizacji, które powinny być prostsze od pozostałych. Faktyczne wykonanie projektu może się różnić od schematu, a także ulec rozciągnięciu lub skróceniu w czasie.
+
+
+#### Omówienie etapów realizacji
+
+- Planowanie, projektowanie i dokumentacja:\
+    Zakłada: przeznaczenie 1. tygodnia na zaplanowanie wyglądu i funkcjonalności; kolejnych 4. na dokumentacje wykonywaną na bieżąco, która będzie dotyczyć wykonywanych działań; ostatniego tygodnia na uzupełnienie finalne dokumentacji oraz stworzenie instrukcji instalacji aplikacji.
+- Nauka technologi:\
+    Etap zakłada poznanie biblioteki Python - Tkinter, która odpowiada za graficzny interfejs użytkowanej aplikacji. Z pewnością, dokonywana będzie również pomniejsza nauka w trakcie działań, w odpowiedzi na spotykane trudności.
+- Testy:\
+    Poświęcone zostaną głównie sprawdzaniu odporności aplikacj na podwawanie niewłaściwych danych, infromowanie o tym użytkownika oraz obsłudze wyjątków. Na koniec projektu przetestowane zostanie również proces instalacji programu zgodnie ze stworzoną dokumentacją.
+- Prace nad modułami:\
+    Prace backend-owe, które skupiać się będą nad opracowaniem metodyki obsługi dokumentów oraz ich interpretacją w ramach aplikacji. Na tym etapie zostaną stworzone najpierw moduły generujące pliki .docx, a następnie .pdf-y oraz zostanie opracowana prosta edycja plików .txt, zgodnie z założeniami funkcjonalności.
+- Prace nad interfejsem:\
+    Interfej graficzny w opraciu o bibliotekę Tkinter zostanie wstępnie zaprojektowany i rozpoczęty na początku projektu. Po opracowaniu modułów zostanie z nimi zintegrowany, a także zostaną dostowowane okienka, aby użytkownik mógł intuicyjnie podawać odpowienie dane.
+- Implementacja i wdrożenie:\
+    Zostanie zintegrowane moduły do interfejsu graficznego, a także aplikacja zostanie "spakowana" do instalacji dla użytkownika w przystępny sposób.
