@@ -157,3 +157,44 @@ Powyższy plan obrazuje schematycznie założenia realizacji kolejnych etapów. 
     Interfej graficzny w opraciu o bibliotekę Tkinter zostanie wstępnie zaprojektowany i rozpoczęty na początku projektu. Po opracowaniu modułów zostanie z nimi zintegrowany, a także zostaną dostowowane okienka, aby użytkownik mógł intuicyjnie podawać odpowienie dane.
 - Implementacja i wdrożenie:\
     Zostanie zintegrowane moduły do interfejsu graficznego, a także aplikacja zostanie "spakowana" do instalacji dla użytkownika w przystępny sposób.
+
+
+## Ryzyka związane z projektem
+
+- Opóźnienia związane z technologią\
+Praca nad nową biblioteką (Tkinter), może przynieść niespodziewane przesunięcia w czasie. Istnieje zatem ryzyko, że zakładany czas na naukę oraz wdrożenie może okazać sięn iewystarczający.
+
+- Problemy z integracją modułów\
+Integracja modułów back-end-owych z front-endem również może być źródłem błędów i komplikacji. Możliwe, że integracja będzie wymagała więcej czasu, innego - nowego podejścia lub obsługi niewłaściwych danych.
+
+- Testy\
+Pomimo pozornego nieskomplikowania aplikacji, testy mogą ukazać niedopracowanie, błędy, obsługiwanie danych w niewłaściwy sposób, niepoprawną implementacje lub integrację modułów. Mogą spowodować kolejne opóźnienia lub przestoje.
+
+- Zmiany projektowe\
+Projekt może napotkać zmiany w zakresie planowanych funkcjonalności - chodźby ze względów na potrzebę dodanie niezbędnych elementów, które jeszcze nie zostały wykryte. Mogą wynikać z ponownej definicji założeń lub planów, czym mogą wpłynąć na czas i rozmiar prac.
+
+## Kosztorys
+
+#### Koszty osobowe
+
+Zakładmy, że projekt zostanie wykonany przez jedną osobę:\
+Stawka godzinowa: 50 PLN/h\
+Czas pracy jest zadeklarowany w widełkach: 4-8 tygodni, 4-5 dni w tygodniu, 3-5 godzin dziennie - zatem szacowane koszty to:\
+Minimalny koszt: 50 PLN/h * 3 h/dzień * 4 dni/tydzień * 4 tygodnie = 2 400 PLN\
+Maksymalny koszt: 50 PLN/h * 5 h/dzień * 5 dni/tydzień * 8 tygodni = 10 000 PLN
+
+#### Koszty sprzętowe
+Zakup lub wynajem komputera spełniającego wymagania projektu:
+
+Zakup nowego komputera: 1 500 - 2 000 PLN\
+Wynajem komputera: 150 - 200 PLN/tydzień
+
+#### Koszty wdrożenia
+Zakładamy, że aplikacja zostanie wdrożona na platformie Windows, bez dodatkowych kosztów wdrożenia (brak potrzeby serwerów, czy dodatkowych usług).
+
+Wszelakie koszty należy regularnie kontrolować i analizować postępy projektu względem zainwestowanych pieniędzy.
+
+### Suma kosztów
+
+Minimalna suma kosztów: 3 000 PLN\
+Maksymalny suma kosztów: 12 000 PLN
