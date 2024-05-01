@@ -12,6 +12,7 @@ v. 1.0
 6. [Pozostałe możliwości](#pozostałe-możliwości)
 7. [Czasochłonność projektu](#czasochłonność-projektu)
 8. [Plan realizacji projektu](#plan-realizacji-projektu)
+9. [Przypadki użycia](#Przypadki-użycia)
 
 
 ## Informacje ogólne
@@ -198,3 +199,34 @@ Wszelakie koszty należy regularnie kontrolować i analizować postępy projektu
 
 Minimalna suma kosztów: 3 000 PLN\
 Maksymalny suma kosztów: 12 000 PLN
+
+## Przypadki użycia
+
+Aktorem we wszystkich przypadkach użycia jest Użytkownik, który korzysta z aplikacji. Inicjuje on generowanie dokumentów, certyfikatów, konwersję do pdf-ów, edycję .txt i zmiany w ustawieniach.
+
+1. Generowanie dokumentów:
+    - Opis: Aktor wybiera szablony dokumentów oraz dane wejściwe. Aplikacja weryfikuje dane, wypełnia luki i eksportuje nowe pliki.
+    - Zawiera: Wczytanie plików; Weryfikacja plików.
+    - Rozszerza: Zapis nowych plików.
+
+2. Generowanie certyfikatów:
+    - Opis: Aktor wybiera szablon dokumentu oraz dane wejściwe. Aplikacja weryfikuje dane, wypełnia luki i eksportuje serie plików.
+    - Zawiera: Wczytanie plików; Weryfikacja plików.
+    - Rozszerza: Zapis nowych plików.
+
+3. Konwersja na pdf:
+    - Opis: Aktor wybiera dokumenty do konwersji. Aplikacja weryfikuje format, konwertuje i zapisuje nowe pliki.
+    - Zawiera: Wczytanie plików; Weryfikacja formatu plików.
+    - Rozszerza: Zapis nowych plików.
+
+4. Edycja tekstowa:
+    - Opis: Aktor otwiera plik tekstowy, dokonuje w nim zmian, a następnie zapisuje te zmiany.
+    - Zawiera: Wczytanie pliku; Aktualizacje zawartości.
+
+5. Zarządzanie ustawieniami aplikacji:
+    - Opis: Aktor, poprzez panel ustawień aplikacji, dostosowuje  parametry działania programu, aby lepiej dopasować aplikację do swoich potrzeb.
+    - Rozszerza: Modyfikację separatorów; Wybór rodzaju luk w plikach.
+
+### Diagram przypadków użycia
+
+![Diagram przypadków użycia](./Diagram.png)
