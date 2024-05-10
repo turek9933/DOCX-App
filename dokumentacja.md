@@ -13,6 +13,7 @@ v. 1.0
 7. [Czasochłonność projektu](#czasochłonność-projektu)
 8. [Plan realizacji projektu](#plan-realizacji-projektu)
 9. [Przypadki użycia](#Przypadki-użycia)
+10. [Strategia bezpieczeństwa](#strategia-bezpieczeństwa)
 
 
 ## Informacje ogólne
@@ -230,3 +231,27 @@ Aktorem we wszystkich przypadkach użycia jest Użytkownik, który korzysta z ap
 ### Diagram przypadków użycia
 
 ![Diagram przypadków użycia](./Diagram.png)
+
+## Strategia bezpieczeństwa
+
+### Zasoby do ochrony
+
+Elementy projektu, które należy chronić to:
+- dane użytkowników. Obejmuje to ochronę plików szablonów, jak i danych osobowych używanych do ich uzupełnienia - szczególnie na etapie przetwarzania ich przez program; 
+- integralność aplikacji. Aplikacja musi funkcjonować zgodnie z oczekiwaniami. Błędy nie mogą doprowadzać do nieporządanych ingerecji systemowych;
+- dostępność. Wyłącznie użytkownicy uprawnieni powinni mieć dostęp do aplikacji.
+
+### Potencjalne zagrożenia
+
+Niewłaściwie opracowana aplikacja może generować następujące zagrożenia:
+- udostępnianie przetwarzanych danych. Z racji dostępu do informacji niezbędych do pracy, istnieje ryzyko "wycieku" informacji poufnych.
+- ingerencja z systemem użytkownika. Może następować szczególnie w momencie wystąpienia nieprzewidzianych i nieobsługiwanych błędów, co może powodować np. generowanie "śmieci".
+- opóźnienia w dostępie do funkcjonalności. Nadmierne wykorzystywanie lub w sposób niezgodny z zaleceniami aplikacji może prowadzić do dłuższego oczekiwania na rezultaty.
+
+### Koszty zabezpieczeń
+
+Koszty związane są z: przeprowadzaniem testów bezpieczeństwa; poszukiwaniem luk i niedociągnieć w programie; wdrożeniem zabezpieczeń; utrzymywaniem oraz aktualizowaniem zabezpieczeń.
+
+### Zyski z ochrony
+
+Zyski to przede wszystkim zgodność z regulacjami o ochornie danych osobowych oraz zapewnienie sprawnego działanie aplikacji, co powinno przełożyć się na wzrost reputacji.
