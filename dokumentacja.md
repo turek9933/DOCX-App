@@ -14,7 +14,7 @@ v. 1.0
 8. [Plan realizacji projektu](#plan-realizacji-projektu)
 9. [Przypadki użycia](#Przypadki-użycia)
 10. [Strategia bezpieczeństwa](#strategia-bezpieczeństwa)
-
+11. [Harmonogram testów](#harmonogram-testów)
 
 ## Informacje ogólne
 Aplikacja traktuje o manipulowaniu dokumentami w formacie .docx według ustalonych funkcjonalności. Zostanie stworzona w języku Python, dostępna będzie na platformę Windows. (W przyszłości, przy łatwej portacji, zostanie opracowana również wersja na Linux-a.)
@@ -255,3 +255,44 @@ Koszty związane są z: przeprowadzaniem testów bezpieczeństwa; poszukiwaniem 
 ### Zyski z ochrony
 
 Zyski to przede wszystkim zgodność z regulacjami o ochornie danych osobowych oraz zapewnienie sprawnego działanie aplikacji, co powinno przełożyć się na wzrost reputacji.
+
+
+## Harmonogram testów
+
+### Sposoby testowania poszczególnych modułów
+
+1. Generowanie dokumentów
+- Sprawdzenie pojedynczych funkcji odpowiedzialnych za wczytywanie plików, weryfikację danych, wypełnianie luk oraz zapis nowych plików.
+- Upewnienie się, że wszystkie funkcje współpracują poprawnie, wczytując pliki, weryfikując dane, wypełniając luki i zapisując nowe pliki.
+- Sprawdzenie poprawności wypełniania luk na różnych zestawach danych, w tym danych poprawnych oraz błędnych.
+- Szacowany czas testów: 4 dni
+
+2. Generowanie certyfikatów
+- Sprawdzenie funkcji odpowiedzialnych za wczytywanie szablonu, weryfikację danych oraz generowanie wielu dokumentów.
+- Upewnienie się, że proces generowania dokumentów działa poprawnie od początku do końca.
+- Weryfikacja poprawności generowanych dokumentów przy użyciu różnych zestawów danych, w tym danych poprawnych oraz błędnych.
+- Szacowany czas testów: 3 dni
+
+3. Konwersja na pdf-y
+- Sprawdzenie funkcji odpowiedzialnych za konwersję plików.
+- Upewnienie się, że proces konwersji działa poprawnie, wczytując pliki .docx i zapisując pliki .pdf.
+- Weryfikacja poprawności konwersji różnych dokumentów, w tym dokumentów z dużą ilością zawartości.
+- Szacowany czas testów: 2 dni
+
+4. Edytor tekstowy
+- Sprawdzenie funkcji odpowiedzialnych za wczytywanie, edycję i zapis plików.
+- Upewnienie się, że wszystkie funkcje edytora współpracują poprawnie.
+- Weryfikacja poprawności edycji i zapisu plików.
+- Szacowany czas testów: 2 dni
+
+5. Zarządzanie ustawieniami aplikacji
+- Sprawdzenie funkcji odpowiedzialnych za wczytywanie i zapisywanie ustawień.
+- Upewnienie się, że zmiany ustawień wpływają na działanie aplikacji zgodnie z oczekiwaniami.
+- Weryfikacja poprawności działania panelu ustawień ze zmienonymi konfiguracjami.
+- Szacowany czas testów: 3 dni
+
+### Przeprowadzanie testów
+
+Testy będą przeprowadzane głównie przez wykonawce projektu, jako głównego dewelopera.
+Harmonogram ich wykonywania będzie pokrywać się z planem realizacji projektu. Moduły będą sprawdzane po kolei oraz w połączeniu z kontrolowaniem wpływu ustawień aplikacji na dany moduł.
+Na etapie testów końcowych, do testowania zostaną zaproszeni także użytkownicy, aby zapewnić obiektywność i wykrycie potencjalnych problemów z perspektywy końcowego użytkownika.
