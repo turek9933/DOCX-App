@@ -15,6 +15,7 @@ v. 1.0
 9. [Przypadki użycia](#Przypadki-użycia)
 10. [Strategia bezpieczeństwa](#strategia-bezpieczeństwa)
 11. [Harmonogram testów](#harmonogram-testów)
+11. [Zabezpieczenia projektu](#zabezpieczenia-projektu)
 
 ## Informacje ogólne
 Aplikacja traktuje o manipulowaniu dokumentami w formacie .docx według ustalonych funkcjonalności. Zostanie stworzona w języku Python, dostępna będzie na platformę Windows. (W przyszłości, przy łatwej portacji, zostanie opracowana również wersja na Linux-a.)
@@ -296,3 +297,18 @@ Zyski to przede wszystkim zgodność z regulacjami o ochornie danych osobowych o
 Testy będą przeprowadzane głównie przez wykonawce projektu, jako głównego dewelopera.
 Harmonogram ich wykonywania będzie pokrywać się z planem realizacji projektu. Moduły będą sprawdzane po kolei oraz w połączeniu z kontrolowaniem wpływu ustawień aplikacji na dany moduł.
 Na etapie testów końcowych, do testowania zostaną zaproszeni także użytkownicy, aby zapewnić obiektywność i wykrycie potencjalnych problemów z perspektywy końcowego użytkownika.
+
+## Zabezpieczenia projektu
+
+### Naturalny styk
+
+- Intuicyjny interfejs: Interfejs użytkownika będzie zaprojektowany w sposób intuicyjny, z czytelnymi ikonami i jasnymi instrukcjami, np. okna dialogowe informujące o błędach będą jasno wskazywać, na źródło/obszar problemu.
+- Samouczek: Aplikacja będzie zawierać okienko z opisem działania oraz użycia funkcjonalności wbudowanych w program. Dzięki jej pomocy użytkownicy będą mieć ułatwiony proces korzystania z aplikacji.
+
+### Spójność pozioma i pionowa
+
+- Jednolite zasady dostępu: Zasady dotyczące dostępu do wszystkich modułów i uprawnień będą spójne.
+
+### Domyślna odmowa dostępu
+
+- Walidacja danych wejściowych: Aplikacja będzie domyślnie odrzucać wszelkie nieznane lub niepoprawne dane wejściowe, np. użytkownik nie będzie w stanie wczytać plik o nieznanym formacie lub aplikacja odrzuci ten plik i powiadomi o błędzie.
