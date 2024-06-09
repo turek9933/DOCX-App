@@ -22,3 +22,4 @@ color_font = 'black'
 color_active_background = '#E6E6B4'#Ciemny żółty
 #color_active_background = '#A48C54'#Ciemny brąz
 #color_active_background = '#96BE7C'#Ciemny zielony
+color_line = '#FFC81E'
