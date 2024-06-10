@@ -1,8 +1,8 @@
 from logging import config
-import string
 from tkinter import *
 import tkinter
-from tkinter.filedialog import askopenfilenames
+from tkinter import filedialog, messagebox
+from tkinter.filedialog import askopenfilenames, askopenfilename
 import names
 import sys
 import os
@@ -13,7 +13,7 @@ def foo_to_print(to_print):
 
 # Generuje okienko do odkliku z danym tytulem i treścią wiadomości
 def show_confirmation_window(title: str, message: str):
-    tkinter.messagebox.showinfo(title, message)
+    messagebox.showinfo(title, message)
 
 # Wyświetla w okienku listy plików z tablic docx_list oraz txt_list
 # which decyduje, co jest do wyświetlenia: 0 - tylko docx, 1 - tylko txt, 2 - obie listy
@@ -93,6 +93,9 @@ def open_files():
 def open_docx():
     return askopenfilenames(filetypes = [('Word i dokumenty tekstowe', '*.docx')], title = 'NIE PATRZ NA KONIA!')
 
+def open_txt():
+    return askopenfilenames(filetypes = [('Dokumenty tekstowe', '*.txt')], title = 'NIE PATRZ NA KONIA!')
+
 # Czyści okno ze wszystkich elementów poza 'help' i '.DOCX-App'
 def clear_window():
     for i in b:
@@ -157,6 +160,15 @@ def to_pdf():
     new_button('generate', 'button_main_generate_not_active.png', 0.738, 0.5)
     b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!')])
 
+# Otwiera okienko z wyborem pliku .txt oraz edytor tesktowy do tego pliku
+def to_txt():
+    try:
+        file_path = askopenfilename(filetypes = [('Dokumenty tekstowe', '*.txt')], title='NIE PATRZ NA KONIA!')
+        if file_path:
+            subprocess.Popen(["python", "maker_txt.py", file_path])
+    except Exception as e:
+        print('Błąd przy edycji plików txt: ', e)
+
 # Inicjuje główny widok aplikacji
 def to_main():
     new_label('.DOCX-App', 'label_main.png', 0.04, 0.06, '.DOCX-App')
@@ -168,7 +180,7 @@ def to_main():
     new_button('pdf', 'button_pdf.png', 0.2, 0.65)
     b['pdf'].config(command = lambda: [foo_to_print('button pdf: pressed!'), to_pdf()])#TODO
     new_button('edytor_txt', 'button_edytor_txt.png', 0.6, 0.65)
-    b['edytor_txt'].config(command = lambda: [foo_to_print('button edytor_txt: pressed!')])#TODO
+    b['edytor_txt'].config(command = lambda: [foo_to_print('button edytor_txt: pressed!'), to_txt()])#TODO
     
     
     new_button('help', 'button_help.png', 0.868, 0.8)
