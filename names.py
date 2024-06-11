@@ -1,6 +1,7 @@
 from pathlib import Path
 from tkinter import Button, Canvas, PhotoImage
 from tkinter.filedialog import askopenfile
+import os
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path('graphic')
@@ -23,3 +24,5 @@ color_active_background = '#E6E6B4'#Ciemny żółty
 #color_active_background = '#A48C54'#Ciemny brąz
 #color_active_background = '#96BE7C'#Ciemny zielony
 color_line = '#FFC81E'
+
+os_python_command = 'python' if os.name == 'nt' else 'python3'

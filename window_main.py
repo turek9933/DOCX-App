@@ -21,27 +21,31 @@ def show_lists(which: int):
     # *.docx
     if which == 0:
         if len(docx_list) != 0:
+            delete_labels(docx_list)
             y_offset = 0.42# Początkowy offset dla etykiet z nazwami plików
             for i, docx_file in enumerate(docx_list):
-                new_label(f'docx_file_{i}', 'label_average_main.png', 0.04, y_offset, os.path.basename(docx_file))
+                new_label(os.path.basename(docx_file), 'label_average_main.png', 0.04, y_offset, os.path.basename(docx_file))
                 y_offset += 0.08# Przesunięcie dla każdej kolejnej etykiety
     # *.txt
     if which == 1:
         if len(txt_list) != 0:
+            delete_labels(txt_list)
             y_offset = 0.42# Początkowy offset dla etykiet z nazwami plików
             for i, txt_file in enumerate(txt_list):
-                new_label(f'txt_file_{i}', 'label_average_main.png', 0.04, y_offset, os.path.basename(txt_file))
+                new_label(os.path.basename(docx_file), 'label_average_main.png', 0.04, y_offset, os.path.basename(txt_file))
                 y_offset += 0.08# Przesunięcie dla każdej kolejnej etykiety
     # *.docx oraz *.txt
     if which == 2:
-        if len(docx_list) != 0 and len(txt_list) != 0:
+        if len(docx_list) != 0 or len(txt_list) != 0:
+            delete_labels(docx_list)
+            delete_labels(txt_list)
             y_offset = 0.42# Początkowy offset dla etykiet z nazwami plików
             for i, txt_file in enumerate(txt_list):
-                new_label(f'txt_file_{i}', 'label_average_main.png', 0.04, y_offset, os.path.basename(txt_file))
+                new_label(os.path.basename(txt_file), 'label_average_main.png', 0.04, y_offset, os.path.basename(txt_file))
                 y_offset += 0.08# Przesunięcie dla każdej kolejnej etykiety
             y_offset = 0.42# Początkowy offset dla etykiet z nazwami plików
             for i, docx_file in enumerate(docx_list):
-                new_label(f'docx_file_{i}', 'label_average_main.png', 0.4, y_offset, os.path.basename(docx_file))
+                new_label(os.path.basename(docx_file), 'label_average_main.png', 0.4, y_offset, os.path.basename(docx_file))
                 y_offset += 0.08# Przesunięcie dla każdej kolejnej etykiety
 
 # Odpowiada za zamianę przycisku 'generate' na jego aktywną wersję, jeśli są spełnione odpowiednie opcje dostosowane do funkcjonalności
@@ -49,7 +53,8 @@ def generate_button_to_active(option: int):
     if option == 0:
         delete_button('generate')
         new_button('generate', 'button_main_generate.png', 0.738, 0.517)
-        b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!')])#TODO Ma być dla robienia dokumentów make_documents()
+        b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!'), make_documents()])#TODO Ma być dla robienia dokumentów make_documents()
+        show_lists(2)
     elif option == 1:
         if len(txt_list) != 0 and len(docx_list) != 0:
             delete_button('generate')
@@ -68,19 +73,19 @@ def generate_button_to_active(option: int):
         b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!'), make_pdfs()])#TODO Ma być do otwierania i edycji plików .txt make_txt()
 
 # Wyświetla wybrane pliki oraz segreguje je na listy plików .txt i .docx
-def show_files(filez: tuple):
+def add_docx_and_txt(filez: tuple, which: int):
     for i in filez:
-        if i.endswith('.txt'):
+        if i.endswith('.txt') and not i in txt_list:
             txt_list.append(i)
-        elif i.endswith('.docx'):
+        elif i.endswith('.docx') and not i in docx_list:
             docx_list.append(i)
-    b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!'), generate_button_to_active(1)])
-    generate_button_to_active(1)
+    b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!'), generate_button_to_active(which)])
+    generate_button_to_active(which)
 
 # Dodaje wybrane pliki .docx do listy i aktywuje przycisk
 def add_docx_for_pdf(filez: tuple):
     for i in filez:
-        if i.endswith('.docx'):
+        if i.endswith('.docx') and not i in docx_list:
             docx_list.append(i)
     b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!'), generate_button_to_active(2)])
     generate_button_to_active(2)
@@ -98,40 +103,59 @@ def open_txt():
 
 # Czyści okno ze wszystkich elementów poza 'help' i '.DOCX-App'
 def clear_window():
-    for i in b:
-        if not i == 'help' and not i == 'options':
+    for i in list(b.keys()):
+        if not i in ['help', 'options']:
             delete_button(i)
-    for i in l:
+    for i in list(l.keys()):
         if not i == '.DOCX-App':
             delete_label(i)
+
+def reset_lists():
+    global txt_list, docx_list
+    txt_list = []
+    docx_list = []
+
+def make_documents():
+    try:
+        count = 0
+        for docx_file in docx_list:
+            subprocess.run([names.os_python_command, "maker_documents.py", docx_file, txt_list[0]], check=True)
+            count += 1
+        show_confirmation_window("Dokumenty OK", f"Zapisano {count} z {len(docx_list)} dokumentów")
+    except subprocess.CalledProcessError as e:
+        print(f'Błąd tworzenia dokumentów: {e.returncode}, {e.output}')
+    except Exception as e:
+        print('Błąd tworzenia dokumentów: ', e)
 
 # Uruchamia podproces certificate_maker.py, który generuje certyfikaty
 def make_certificates():
     try:
-        subprocess.run(["python", "certificate_maker.py", docx_list[0], txt_list[0]], check=True)
-    except (Exception) as e:
+        subprocess.run([names.os_python_command, "maker_certificates.py", docx_list[0], txt_list[0]], check=True)
+        show_confirmation_window("Certyfikaty OK", "Zapisano wszystkie certyfikaty")
+    except subprocess.CalledProcessError as e:
+        print(f'Błąd tworzenia certyfikatów: {e.returncode}, {e.output}')
+    except Exception as e:
         print('Błąd tworzenia certyfikatów: ', e)
 
 # Uruchamia podproces maker_pdfs.py, który generuje pliki .pdf z zapisanych w tablicy plików .docx
 def make_pdfs():
     try:
-        subprocess.run(["python", "maker_pdfs.py", *docx_list], check = True)
+        subprocess.run([names.os_python_command, "maker_pdfs.py", *docx_list], check=True)
         show_confirmation_window("PDFs OK", "Zapisano wszystkie pliki .pdf")
-    except (Exception) as e:
-        print('Błąd tworzenia certyfikatów: ', e)
+    except subprocess.CalledProcessError as e:
+        print(f'Błąd tworzenia plików PDF: {e.returncode}, {e.output}')
+    except Exception as e:
+        print('Błąd tworzenia plików PDF: ', e)
 
 # Przeprowadza do widoku odpowiedzialnego za generowanie dokumentów
 def to_documents():
     clear_window()
-    delete_label('Cóż generujemy')
-    delete_button('certyfikaty')
-    delete_button('dokumenty')
     new_button('back_arrow', 'button_back_arrow.png', 0.07, 0.8)
     new_label('dokumenty', 'label_main.png', 0.04, 0.25, 'Dokumenty')
     new_label('txt', 'label_short_main.png', 0.04, 0.35, 'Pliki .txt:')
     new_label('docx', 'label_short_main.png', 0.406, 0.35, 'Pliki *.docx:')
     new_button('choose file', 'button_main_choose.png', 0.738, 0.3)
-    b['choose file'].config(command = lambda: [foo_to_print('button choose file: pressed!'), show_files(open_files())])
+    b['choose file'].config(command = lambda: [foo_to_print('button choose file: pressed!'), add_docx_and_txt(open_files(), 0)])
     new_button('generate', 'button_main_generate_not_active.png', 0.738, 0.5)
     b['generate'].config(command = lambda: [foo_to_print('button generate (not active): pressed!')])
     b['back_arrow'].config(command = lambda: [foo_to_print('button back arrow: pressed!'), clear_window(), to_main()])
@@ -144,7 +168,7 @@ def to_certificates():
     new_label('txt', 'label_short_main.png', 0.04, 0.35, 'Pliki *.txt:')
     new_label('docx', 'label_short_main.png', 0.406, 0.35, 'Pliki *.docx:')
     new_button('choose file', 'button_main_choose.png', 0.738, 0.3)
-    b['choose file'].config(command = lambda: [foo_to_print('button choose file: pressed!'), show_files(open_files()), ])
+    b['choose file'].config(command = lambda: [foo_to_print('button choose file: pressed!'), add_docx_and_txt(open_files(), 1)])
     new_button('generate', 'button_main_generate_not_active.png', 0.738, 0.5)
     b['generate'].config(command = lambda: [foo_to_print('button generate: pressed!')])
     b['back_arrow'].config(command = lambda: [foo_to_print('button back arrow: pressed!'), clear_window(), to_main()])
@@ -163,14 +187,16 @@ def to_pdf():
 # Otwiera okienko z wyborem pliku .txt oraz edytor tesktowy do tego pliku
 def to_txt():
     try:
-        file_path = askopenfilename(filetypes = [('Dokumenty tekstowe', '*.txt')], title='NIE PATRZ NA KONIA!')
+        file_path = askopenfilename(filetypes = [('Dokumenty tekstowe', '*.txt')], title = 'NIE PATRZ NA KONIA!')
         if file_path:
-            subprocess.Popen(["python", "maker_txt.py", file_path])
+            subprocess.Popen([names.os_python_command, "maker_txt.py", file_path])
     except Exception as e:
-        print('Błąd przy edycji plików txt: ', e)
+        print(f'Błąd przy edycji plików txt: {e.returncode}, {e.output}')
 
 # Inicjuje główny widok aplikacji
 def to_main():
+    clear_window()
+    reset_lists()
     new_label('.DOCX-App', 'label_main.png', 0.04, 0.06, '.DOCX-App')
     new_label('Cóż generujemy', 'label_main.png', 0.24, 0.35, 'Cóż generujemy?')
     new_button('dokumenty', 'button_dokumenty.png', 0.2, 0.5)
@@ -184,9 +210,9 @@ def to_main():
     
     
     new_button('help', 'button_help.png', 0.868, 0.8)
-    b['help'].config(command = lambda: [foo_to_print('button help: pressed'), os.system('python window_help.py')])#TODO ('python window_help.py') dla Windowsa, ('python3 window_help.py') dla Linuxa
+    b['help'].config(command = lambda: [foo_to_print('button help: pressed'), subprocess.Popen([names.os_python_command, "window_help.py"])])#TODO ('python window_help.py') dla Windowsa, ('python3 window_help.py') dla Linuxa
     new_button('options', 'button_options.png', 0.78, 0.8)
-    b['options'].config(command = lambda: [foo_to_print('button_options: pressed')])#TODO
+    b['options'].config(command = lambda: [foo_to_print('button_options: pressed'), print(l)])#TODO
     o['line'] = canvas.create_line(0 * window_main_width, 0.18 * window_main_height, 1 * window_main_width, 0.18 * window_main_height, fill = names.color_line, width = window_main_width / 100)
     o['author_tomasz'] = canvas.create_text(
         0.903 * window_main_width,
@@ -211,9 +237,9 @@ def new_label(label_name: str, file_name: str, x: float, y: float, label_text: s
     l[label_name] = canvas.create_text(
         (x * window_main_width) + (l_i[label_name].width() / 2),
         (y * window_main_height) + (l_i[label_name].height() / 2),
-        text=label_text,
-        font=names.font,
-        fill=names.color_font
+        text = label_text,
+        font = names.font,
+        fill = names.color_font
     )
 
 # Tworzy nowy przycisk na ekranie
@@ -231,12 +257,25 @@ def new_button(button_name: str, file_name: str, x: float, y: float):
     b[button_name].place(relx = x, rely = y)
     foo_to_print(button_name + ': ' + str(x + b_i[button_name].width() / 2) + ', ' + str(y + b_i[button_name].height() / 2))
 
+def delete_labels(files_list: list):
+    for file_name in files_list:
+        base_name = os.path.basename(file_name)
+        if base_name in l:
+            delete_label(base_name)
+
 def delete_label(object_name: str):
-    canvas.delete(l[object_name], l_b[object_name], l_i[object_name])
+    canvas.delete(l[object_name])
+    canvas.delete(l_b[object_name])
+    canvas.delete(l_i[object_name])
+    del l[object_name]
+    del l_b[object_name]
+    del l_i[object_name]
 
 def delete_button(object_name: str):
     canvas.delete(b_i[object_name])
     b[object_name].destroy()
+    del b[object_name]
+    del b_i[object_name]
 
 window_main_width = 1000
 window_main_height = 600

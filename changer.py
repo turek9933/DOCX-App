@@ -47,6 +47,11 @@ def delete_white_symbol(line):
     else:
         return line
 
+def check_args(docx_file_path, txt_file_path, to_save_docx_path, xml_good, xml_bad):
+    # Sprawdzamy, czy podane ścieżki są poprawne
+    if not os.path.exists(docx_file_path) or not os.path.exists(txt_file_path) or not os.path.exists(to_save_docx_path) or not os.path.exists(xml_good) or not os.path.exists(xml_bad):
+        sys.exit("One of given path does not exists")
+    
 #is_ok - bool, prawdziwy, jeśli faktycznie plik o nazwie xml_good, jest tym z ostatnio zapisanymi poprawniejszymi danymi
 
 #Argumenty po kolei: docx_file_path; txt_file_path; to_save_docx_path; xml_good; xml_bad
@@ -57,6 +62,8 @@ if len(sys.argv) == 6:
     xml_good = sys.argv[4]
     xml_bad = sys.argv[5]
     is_ok = True
+
+    check_args(docx_file_path, txt_file_path, to_save_docx_path, xml_good, xml_bad)
 
     with fileinput.input(files = (txt_file_path)) as f_data:
         for data_line in f_data:

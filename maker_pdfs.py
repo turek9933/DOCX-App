@@ -1,4 +1,3 @@
-import os
 import sys
 from docx2pdf import convert
 
