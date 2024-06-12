@@ -124,8 +124,10 @@ def make_documents():
         show_confirmation_window("Dokumenty OK", f"Zapisano {count} z {len(docx_list)} dokumentów")
     except subprocess.CalledProcessError as e:
         print(f'Błąd tworzenia dokumentów: {e.returncode}, {e.output}')
+        show_confirmation_window("Blad dokumentow", f'{e.output}')
     except Exception as e:
         print('Błąd tworzenia dokumentów: ', e)
+        show_confirmation_window("Blad dokumentow", f'{e.output}')
 
 # Uruchamia podproces certificate_maker.py, który generuje certyfikaty
 def make_certificates():
@@ -134,8 +136,10 @@ def make_certificates():
         show_confirmation_window("Certyfikaty OK", "Zapisano wszystkie certyfikaty")
     except subprocess.CalledProcessError as e:
         print(f'Błąd tworzenia certyfikatów: {e.returncode}, {e.output}')
+        show_confirmation_window("Blad certyfikatow", f'{e.output}')
     except Exception as e:
         print('Błąd tworzenia certyfikatów: ', e)
+        show_confirmation_window("Blad certyfikatow", f'{e.output}')
 
 # Uruchamia podproces maker_pdfs.py, który generuje pliki .pdf z zapisanych w tablicy plików .docx
 def make_pdfs():
@@ -144,8 +148,10 @@ def make_pdfs():
         show_confirmation_window("PDFs OK", "Zapisano wszystkie pliki .pdf")
     except subprocess.CalledProcessError as e:
         print(f'Błąd tworzenia plików PDF: {e.returncode}, {e.output}')
+        show_confirmation_window("PDF Error", f'{e.output}')
     except Exception as e:
         print('Błąd tworzenia plików PDF: ', e)
+        show_confirmation_window("PDF Error", f'{e.output}')
 
 # Przeprowadza do widoku odpowiedzialnego za generowanie dokumentów
 def to_documents():
@@ -212,7 +218,7 @@ def to_main():
     new_button('help', 'button_help.png', 0.868, 0.8)
     b['help'].config(command = lambda: [foo_to_print('button help: pressed'), subprocess.Popen([names.os_python_command, "window_help.py"])])#TODO ('python window_help.py') dla Windowsa, ('python3 window_help.py') dla Linuxa
     new_button('options', 'button_options.png', 0.78, 0.8)
-    b['options'].config(command = lambda: [foo_to_print('button_options: pressed'), print(l)])#TODO
+    b['options'].config(command = lambda: [foo_to_print('button_options: pressed'), subprocess.Popen([names.os_python_command, "window_options.py"])])#TODO
     o['line'] = canvas.create_line(0 * window_main_width, 0.18 * window_main_height, 1 * window_main_width, 0.18 * window_main_height, fill = names.color_line, width = window_main_width / 100)
     o['author_tomasz'] = canvas.create_text(
         0.903 * window_main_width,
