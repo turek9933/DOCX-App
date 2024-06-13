@@ -1,6 +1,8 @@
 import json
 from tkinter import *
+from tkinter import ttk
 import names
+import sys
 
 options_file = names.options_file
 
@@ -56,6 +58,36 @@ def get_certificate_placeholder(char_code: int, amount: int):
         result += c
     return result
 
+def new_label(window, image_file_name: str, label_text: str, pad_x = 0, pad_y = 0, side_name = 'top', anchor_var = 'center',):
+    label_image = PhotoImage(file = names.relative_to_assets(image_file_name))
+    label_bg = Canvas(window, width = label_image.width(), bg = names.color_background, height = label_image.height(), highlightthickness = 0)
+    label_bg.create_image(0, 0, image = label_image, anchor = 'nw')
+    label_bg.create_text(
+        label_image.width() / 2,
+        label_image.height() / 2,
+        text = label_text,
+        font = names.font,
+        fill = names.color_font
+    )
+    label_bg.image = label_image
+    label_bg.pack(padx = pad_x, pady = pad_y, side = side_name, anchor = anchor_var)
+    return label_bg
+
+def new_button(window, image_file_name: str, pad_x = 0, pad_y = 0, side_name = 'top'):
+    button_image = PhotoImage(file = names.relative_to_assets(image_file_name))
+    button = Button(
+        window,
+        image = button_image,
+        borderwidth = 0,
+        highlightthickness = 0,
+        background = names.color_background,
+        activebackground = names.color_active_background
+    )
+    button.image = button_image
+    button.pack(padx = pad_x, pady = pad_y, side = side_name)
+    return button
+ 
+
 # Wczytuje opcje, generuje: etykiety z ustawieniami aplikacji; pola do wpisania nowych danych; przyciski do zapisania nowych danych lub przywrócenia domyślnych  
 def build_options_window():
     global options
@@ -74,23 +106,40 @@ def build_options_window():
     placeholder_certificates_amount_var = IntVar(value = options.get('placeholder_certificates_amount', 10))
 
 
-    Label(options_window, text = f'Separator dokumentów: "{options.get("separator_documents")}"').pack()
-    Entry(options_window, textvariable = separator_documents_var).pack()
+    new_label(options_window, 'label_main.png', f'Separator dokumentów: "{options.get("separator_documents")}"', pad_y = 4)
+    Entry(options_window, textvariable = separator_documents_var, font = names.font, bg = "white", fg = "black", cursor = 'X_cursor', selectbackground = 'green').pack(pady = (0, 20))
+    # Entry(options_window, textvariable=separator_documents_var, font=names.font, bg="white", fg="black", insertbackground="black").pack(pady=(0, 20))
 
-    Label(options_window, text = f'Separator certyfikatów: "{options.get("separator_certificates")}"').pack()
-    Entry(options_window, textvariable = separator_certificates_var).pack()
+    new_label(options_window, 'label_main.png', f'Separator certyfikatów: "{options.get("separator_certificates")}"', pad_y = 4)
+    Entry(options_window, textvariable = separator_certificates_var, font = names.font, bg = "white", fg = "black", cursor = 'X_cursor', selectbackground = 'green').pack(pady = (0, 40))
 
-    Label(options_window, text = "Placeholder (certyfikaty):").pack()
-    OptionMenu(options_window, placeholder_certificates_code_var, *placeholder_options.keys()).pack()
+    new_label(options_window, 'label_main.png', "Placeholder (certyfikaty):", pad_y = 4)
+    
+    option_menu_code = OptionMenu(options_window, placeholder_certificates_code_var, *placeholder_options.keys())
+    option_menu_code.pack(pady = (0, 20))
+    option_menu_code.config(font = names.font, background = '#96BE7C', activebackground = '#123A16', cursor = 'X_cursor')
+    option_menu_code['menu'].config(font = names.font, background = '#96BE7C', activebackground = '#123A16')
 
+    # option_menu_code = OptionMenu(options_window, placeholder_certificates_code_var, *placeholder_options.keys()).pack(pady = (0, 20))
+    # option_menu_code.config(font = names.font)
 
-    Label(options_window, text = "Ilość placeholderów (certyfikaty):").pack()
+    new_label(options_window, 'label_main.png', "Ilość placeholderów (certyfikaty):", pad_y = 4)
     placeholder_amounts = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    OptionMenu(options_window, placeholder_certificates_amount_var, *placeholder_amounts).pack()
-    Label(options_window, text = f'Pierwszy placeholder: "{get_certificate_placeholder(options.get("placeholder_certificates_code"), options.get("placeholder_certificates_amount"))}"').pack()
+    
+    option_menu_amount = OptionMenu(options_window, placeholder_certificates_amount_var, *placeholder_amounts)
+    option_menu_amount.pack(pady = (0, 10))
+    option_menu_amount.config(font = names.font, background = '#96BE7C', activebackground = '#123A16', cursor = 'X_cursor')
+    option_menu_amount['menu'].config(font = names.font, background = '#96BE7C', activebackground = '#123A16')
+    
+    new_label(options_window, 'label_average_main.png', 'Pierwszy placeholder:', pad_y = (0, 4))
+    new_label(options_window, 'label_main.png', f'"{get_certificate_placeholder(options.get("placeholder_certificates_code"), options.get("placeholder_certificates_amount"))}"', pad_y = (0, 40))
 
-    Button(options_window, text = "Zapisz", command = lambda: [save_vars_to_settings(separator_documents_var, separator_certificates_var, placeholder_options[placeholder_certificates_code_var.get()], placeholder_certificates_amount_var), refresh_window()]).pack()
-    Button(options_window, text = "Przywróć domyślne", command = lambda: [reset_defaults(), refresh_window()]).pack()
+
+    button_save = new_button(options_window, 'button_zapisz.png', 0, 20)
+    button_save.config(cursor = 'X_cursor', command = lambda: [save_vars_to_settings(separator_documents_var, separator_certificates_var, placeholder_options[placeholder_certificates_code_var.get()], placeholder_certificates_amount_var), print('button save: pressed')])
+    
+    button_reset = new_button(options_window, 'button_przywroc_domyslne.png', 0, 20)
+    button_reset.config(cursor = 'X_cursor', command = lambda: [reset_defaults(), print('button reset: pressed')])
 
 # Usuwa wszystkie elementy okna i wywołuje jego ponowne wygenerowanie
 def refresh_window():
@@ -106,6 +155,8 @@ def create_options_window():
     options_window.title("Ustawienia")
     options_window.geometry("600x700")
     options_window.configure(background = names.color_background)
+    options_window.bind('<space>', sys.exit)# Spacja jest przypisana jako klawisz wyłączający okienko
+
 
     icon_image = PhotoImage(file = "button_help.png")
     options_window.iconphoto(True, icon_image, icon_image)

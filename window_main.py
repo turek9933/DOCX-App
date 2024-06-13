@@ -302,7 +302,7 @@ window_main = Tk()
 window_main.geometry(f'{window_main_width}x{window_main_height}')
 window_main.title('.DOCX-App')
 window_main.configure(background = names.color_background)
-window_main.bind('<space>', sys.exit)#TODO Spacja jest przypisana jako guzik wyłączający aplikację
+window_main.bind('<space>', sys.exit)# Spacja jest przypisana jako klawisz wyłączający okienko
 
 # Stworzenie 'nadpudełka' aplikacji
 canvas = Canvas(
