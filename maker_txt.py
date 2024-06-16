@@ -10,12 +10,12 @@ def show_confirmation_window(title: str, message: str):
 
 # Zwraca odczytany plik
 def load_file(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding = 'utf-8') as file:
         return file.read()
 
 # Zapisuje do piku daną zawartość
 def save_file(file_path, content):
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', encoding = 'utf-8') as file:
         file.write(content)
 
 # Otwiera i wczytuje do aplikacji plik tekstowy

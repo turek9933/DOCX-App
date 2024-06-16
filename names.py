@@ -20,6 +20,7 @@ def button_coords(button_name: Button, canvas: Canvas):
 color_background = '#FAFAC8'
 font = ('Lato', 16)
 font_bold = ('Lato', 16, 'bold')
+font_small = ('Lato', 12)
 color_font = 'black'
 color_active_background = '#E6E6B4'#Ciemny żółty
 #color_active_background = '#A48C54'#Ciemny brąz

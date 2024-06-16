@@ -158,7 +158,7 @@ def create_options_window():
     options_window.bind('<space>', sys.exit)# Spacja jest przypisana jako klawisz wyłączający okienko
 
 
-    icon_image = PhotoImage(file = "button_help.png")
+    icon_image = PhotoImage(file = "graphic/button_options.png")
     options_window.iconphoto(True, icon_image, icon_image)
     
     build_options_window()
