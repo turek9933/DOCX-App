@@ -1,33 +1,22 @@
-#TODO TO DELETE
-#TOOOOOOOOOMEEEEEKKKK
-# Możliwe, że potrzebujesz dwóch kopii archiwów .zip
-# Nie wiem po co i na co, ale w poprzedniej wersji miałeś w main.py usuwanie document_name.zip oraz temp.zip
-# Zatem były 2 .zip -y, coś w tym może być
-#Chodzi o linijkę 93, 96 stąd: https://github.com/turek9933/DOCX-App/blob/Sciezki_bezposrednie_zamiast_nazw_txt_docx/main.py#L93
-
 import sys
 import fileinput
-from time import sleep
 import os
 import xml
+import names
 
-#TODO dotegować wyjątki/błąd jak w pliku '???'
 
-#TODO TO DELETE
-#Ogarnąć separatory customowe
-
-line_sep = ";;;"
+# Odczytanie z pliku JSON obecnego separatora dokumentów
+line_sep = names.get_separator_documents()
 
 def lets_search(xml_good, xml_bad, word_to_find, word_to_put):    
     #Otwieramy plik .xml do przeszukania (xml_bad) i szukamy kolejnych luk do zastąpienia
-    with fileinput.FileInput(files=(os.path.join(to_save_docx_path, "temp", "word", xml_bad))) as f_xml_read:
+    with fileinput.FileInput(files = (os.path.join(to_save_docx_path, "temp", "word", xml_bad)), encoding = names.detect_encoding(os.path.join(to_save_docx_path, "temp", "word", xml_bad))) as f_xml_read:
         #Otwieramy plik .xml w folderze do nadpisania go nowymi danymi 
-        with open(os.path.join(to_save_docx_path, "temp", "word", xml_good), 'w') as f_xml_write:
+        with open(os.path.join(to_save_docx_path, "temp", "word", xml_good), 'w', encoding = names.detect_encoding(os.path.join(to_save_docx_path, "temp", "word", xml_good))) as f_xml_write:
             #Przechodimy przez linie pliku (xml_bad), szukając kolejnych słów do zastąpienia je kolejnymi danymi
             #Tak zastąpionymi liniami nadpisujemy plik w folderze tymczasowym 
             for line in f_xml_read:
                 temp_line = str(line)
-                #print(school_data_splited)#TODO
                 while temp_line.find(word_to_find) != -1:
                     temp_line = temp_line.replace(word_to_find, word_to_put)
                 f_xml_write.write(temp_line)
@@ -49,7 +38,7 @@ def delete_white_symbol(line):
 
 def check_args(docx_file_path, txt_file_path, to_save_docx_path, xml_good, xml_bad):
     # Sprawdzamy, czy podane ścieżki są poprawne
-    if not os.path.exists(docx_file_path) or not os.path.exists(txt_file_path) or not os.path.exists(to_save_docx_path) or not os.path.exists(xml_good) or not os.path.exists(xml_bad):
+    if not os.path.exists(docx_file_path) or not os.path.exists(txt_file_path) or not os.path.exists(to_save_docx_path) or not os.path.exists(os.path.join(to_save_docx_path, "temp", "word", xml_good)) or not os.path.exists(os.path.join(to_save_docx_path, "temp", "word", xml_bad)):
         sys.exit("One of given path does not exists")
     
 #is_ok - bool, prawdziwy, jeśli faktycznie plik o nazwie xml_good, jest tym z ostatnio zapisanymi poprawniejszymi danymi
@@ -65,7 +54,7 @@ if len(sys.argv) == 6:
 
     check_args(docx_file_path, txt_file_path, to_save_docx_path, xml_good, xml_bad)
 
-    with fileinput.input(files = (txt_file_path)) as f_data:
+    with fileinput.input(files = (txt_file_path), encoding = names.detect_encoding(txt_file_path)) as f_data:
         for data_line in f_data:
             data_line_splited = data_line.split(line_sep)
             if len(data_line_splited) == 2:

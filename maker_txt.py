@@ -39,12 +39,14 @@ def save_as_new_file(event = None):
         save_file(file_path, text.get(1.0, END))
         show_confirmation_window("Sukces", f"Zapisano plik: {file_path}")
 
+# Obsługuje zmianę używanego w oknie fontu
 def change_font_family(new_font_family):
     global current_font_family, current_font
     current_font_family = new_font_family
     current_font.config(family = new_font_family)
     text.config(font = current_font)
 
+# Obsługuje zmianę używanego w oknie rozmiaru fontu
 def change_font_size(new_font_size):
     global current_font_size, current_font
     current_font_size = new_font_size
@@ -63,18 +65,21 @@ def decrease_font_size(event=None):
     current_font.config(size = current_font_size)
     text.config(font = current_font)
 
+# Obsługuje cofnięcie zmian. Pomija błąd w przypadku próby cofnięcia do nieistniejącego stanu
 def undo(event = None):
     try:
         text.edit_undo()
     except TclError:
         pass
 
+# Obsługuje przywracanie zmian. Pomija błąd w przypadku próby przywrócenia nieistniejącego stanu
 def redo(event = None):
     try:
         text.edit_redo()
     except TclError:
         pass
 
+# Sprawdza poprawną ilość argumentów wywołania skryptu
 if len(sys.argv) != 2:
     print("Prawidłowa forma wywołania programu: python script.py <plik.txt>")
     sys.exit(1)

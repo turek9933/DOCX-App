@@ -3,6 +3,7 @@ from pathlib import Path
 from tkinter import Button, Canvas, PhotoImage
 from tkinter.filedialog import askopenfile
 import os
+import chardet
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path('graphic')
@@ -56,3 +57,10 @@ def get_placeholder_certificates_code():
 
 def get_placeholder_certificates_amount():
     return get_option(3)
+
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as file:
+        raw_data = file.read()
+        result = chardet.detect(raw_data)
+        encoding = result['encoding']
+        return encoding

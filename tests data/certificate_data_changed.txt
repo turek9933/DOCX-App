@@ -1,0 +1,4 @@
+Ala Kot;;;Szabrownik
+Puss in Boots;;;Czarodziej
+AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ;;;0123456789
+aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż;;;0123456789

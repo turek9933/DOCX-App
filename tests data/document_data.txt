@@ -1,2 +1,5 @@
 {data};;;10 marca 2024
 {osoba};;;Pawel Gabrowicz
+{kajto};;;Kajetan Zając
+{alfabet_pl};;;AĄBĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż
+{digits_pl};;;0123456789

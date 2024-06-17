@@ -1,2 +1,4 @@
 Ala Kot	Szabrownik
 Puss in Boots	Czarodziej
+ĄĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ	012345678901
+aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż	0123456789

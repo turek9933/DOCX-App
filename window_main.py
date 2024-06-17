@@ -302,6 +302,8 @@ window_main = Tk()
 window_main.geometry(f'{window_main_width}x{window_main_height}')
 window_main.title('.DOCX-App')
 window_main.configure(background = names.color_background)
+icon_image = PhotoImage(file = "graphic/icon_main.png")
+window_main.iconphoto(True, icon_image, icon_image)
 window_main.bind('<space>', sys.exit)# Spacja jest przypisana jako klawisz wyłączający okienko
 
 # Stworzenie 'nadpudełka' aplikacji

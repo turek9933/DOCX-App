@@ -7,8 +7,8 @@ import shutil
 from pathlib import Path
 import zipfile
 import fileinput
-from time import sleep
 import sys
+import names
 
 #Definicja kolejnych funkcji
 
@@ -34,13 +34,13 @@ def check_sys():
 def digit_word(n):
     i = 0
     ret = ""
-    while i < 10:
+    while i < names.get_placeholder_certificates_amount():
         ret += chr(n)
         i += 1
     return ret
 #Funkcja zwraca ilość linii z pliku w miejscu f_dir_and_name
 def how_much_numbers_file(f_dir_and_name):
-    with open(f_dir_and_name) as f:
+    with open(f_dir_and_name, encoding = names.detect_encoding(f_dir_and_name)) as f:
         for i, _ in enumerate(f):
             pass
         return i + 1
@@ -75,6 +75,8 @@ if len(sys.argv) != 3:
 certificate_name = os.path.join(sys.argv[1])
 data_name = os.path.join(sys.argv[2])
 
+data_line_separator = names.get_separator_certificates()
+
 if os.name == "nt":
     certificate_name = certificate_name.replace("/", "\\")
     data_name = data_name.replace("/", "\\")
@@ -88,10 +90,6 @@ temp_zip_path = os.path.join(certificate_name.replace(".docx", "temp.zip"))
 temp_dir = os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp")
 original_xml_path = os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "document_original.xml")
 output_dir = data_name.replace(".txt", "")
-
-#TODO TO DELETE
-#certificate_name = check_docx(certificate_name)
-#data_name = check_txt(data_name)
 
 data_lines_count = how_much_numbers_file(data_name)
 
@@ -117,27 +115,27 @@ try:
     #Znalezione luki zastępujemy kolejnymi członami z pliku z danymi (data_name)
 
     #Otwarcie pliku z danymi (dana_name)
-    with fileinput.input(files = (data_name)) as f_data:
+    with fileinput.input(files = (data_name), encoding = names.detect_encoding(data_name)) as f_data:
         #Zapisujemy też numer linii, na której działamy
         line_count = 0
         #Idziemy po każdej lini z pliku, będziemy zamieniać wyrazy i tworzyć nowe pliki .docx
         for data_line in f_data:
             #Dzielimy każdą linię na człony rozielone tabulatorem (domyślny podział Excela)
-            data_line_splited = data_line.split(chr(9))
+            data_line_splited = data_line.split(data_line_separator)
             #Zapamiętujemy pierwszy człon, gdyż posłuży on jako nazwa nowego pliku .docx
             new_docx_name = data_line_splited[0]
             #Pilnujemy również indeksów członów linii
             index = 0
 
             #Otwieramy orginalny plik .xml (document_original.xml) i szukamy kolejnych luk do zastąpienia
-            with fileinput.FileInput(original_xml_path) as f_docx_read:
+            with fileinput.FileInput(original_xml_path, encoding = names.detect_encoding(original_xml_path)) as f_docx_read:
                 #Otwieramy plik .xml w folderze do nadpisania go nowymi danymi 
-                with open(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp", "word", "document.xml"), "w") as f_docx_write:
+                with open(os.path.join(certificate_name.replace(certificate_name[certificate_name.rfind(sys_id):], ""), "temp", "word", "document.xml"), "w", encoding = 'utf-8') as f_docx_write:
                     #Przechodimy przez linie pliku orginalnego (document_original.xml), szukając kolejnych luk (10 cyfr), zastępując je kolejnymi danymi (data_line_splited[index])
                     #Tak zastąpionymi liniami nadpisujemy plik w folderze tymczasowym 
                     for line in f_docx_read:
                         temp_line = str(line)
-                        char_code_numer = 48
+                        char_code_numer = names.get_placeholder_certificates_code()
                         while temp_line.find(digit_word(char_code_numer)) != -1 and index < len(data_line_splited):
                             temp_line = temp_line.replace(digit_word(char_code_numer), data_line_splited[index])
                             char_code_numer += 1

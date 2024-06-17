@@ -10,7 +10,6 @@ import shutil
 from pathlib import Path
 import zipfile
 import fileinput
-from time import sleep
 import subprocess
 import names
 
@@ -60,8 +59,7 @@ sys_id = check_sys()
 
 #Pobranie ścieżek do pliku schematu .docx i pliku z danymi .txt
 if len(sys.argv) < 3:
-    print("Prawidlowa forma wywolania programu: skrypt.py <schemat.docx> <dane.txt>")
-    sys.exit(1)
+    sys.exit('Prawidlowa forma wywolania programu: skrypt.py <schemat.docx> <dane.txt>')
 docx_file_path = os.path.join(sys.argv[1])
 txt_file_path = os.path.join(sys.argv[2])
 if os.name == "nt":
@@ -74,56 +72,56 @@ check_args(docx_file_path, txt_file_path)
 to_save_docx_path = os.path.join(txt_file_path.replace(".txt", ""))
 create_dir(to_save_docx_path)
 
-#Będzimy kopiować i edytować dokumenty według kolejnych nazw zapisanch w pliku
-#Przepakowywanie kolejnych plików z .docx do .zip i kopia document.xml
-shutil.copy(docx_file_path, os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")))
-with zipfile.ZipFile(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip"))) as zip_var:
-    zip_var.extractall(path = os.path.join(to_save_docx_path, "temp"))
-
-
-#Kopiowanie orginalnego document.xml w celu jego przeszukiwania i zastępowania
-#Oba pliki mają też zmienioną nazwę, ponieważ
-#szukamy luk w jednym pliku, zastępujemy, zapisujemy do drugiego
-#Później szukamy luk w drugim i zapisujemy do pierwszego.
-#Szukając ciągle w jednym nadpisywalibyśmy tekstem, który nie miałby zastąpionych poprzednich luk
-xml_good = "document.xml"
-xml_bad = "xml_bad_temp.xml"
-shutil.copy(
-    os.path.join(to_save_docx_path, "temp", "word", "document.xml"),
-    os.path.join(to_save_docx_path, "temp", "word", xml_bad))
-os.rename(
-    os.path.join(to_save_docx_path, "temp", "word", "document.xml"),
-    os.path.join(to_save_docx_path, "temp", "word", xml_good))
-
-#TODO TO DELETE
-#Argumenty po kolei: docx_file_path; txt_file_path; to_save_docx_path; xml_good; xml_bad
 try:
+    #Będzimy kopiować i edytować dokumenty według kolejnych nazw zapisanch w pliku
+    #Przepakowywanie kolejnych plików z .docx do .zip i kopia document.xml
+    shutil.copy(docx_file_path, os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")))
+    with zipfile.ZipFile(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip"))) as zip_var:
+        zip_var.extractall(path = os.path.join(to_save_docx_path, "temp"))
+
+
+    #Kopiowanie orginalnego document.xml w celu jego przeszukiwania i zastępowania
+    #Oba pliki mają też zmienioną nazwę, ponieważ
+    #szukamy luk w jednym pliku, zastępujemy, zapisujemy do drugiego
+    #Później szukamy luk w drugim i zapisujemy do pierwszego.
+    #Szukając ciągle w jednym nadpisywalibyśmy tekstem, który nie miałby zastąpionych poprzednich luk
+    xml_good = "document.xml"
+    xml_bad = "xml_bad_temp.xml"
+    shutil.copy(
+        os.path.join(to_save_docx_path, "temp", "word", "document.xml"),
+        os.path.join(to_save_docx_path, "temp", "word", xml_bad))
+    os.rename(
+        os.path.join(to_save_docx_path, "temp", "word", "document.xml"),
+        os.path.join(to_save_docx_path, "temp", "word", xml_good))
+
+    # Argumenty po kolei: docx_file_path; txt_file_path; to_save_docx_path; xml_good; xml_bad
     subprocess.run([names.os_python_command, "changer.py", docx_file_path, txt_file_path, to_save_docx_path, xml_good, xml_bad], check = True)
+    #Usunięcie zbędnego pliku xml
+    os.remove(os.path.join(to_save_docx_path, "temp", "word", xml_bad))
+
+    #Zwijamy plik tymczasowy (temp) do archiwum .zip z nową nazwą (new_docx_name)
+    shutil.make_archive(
+        os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", "")),
+        "zip",
+        os.path.join(to_save_docx_path, "temp"))
+    #Kopiujemy nowe archiwum .zip i zmieniamy format archiwum z .zip na .docx
+    shutil.copy(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")),
+                os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:]))
+    #Usuwamy zbędne już archiwum .zip
+    os.remove(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")))
+    #Usunięcie całego wypakowanego folderu tymczasowego (temp/*) oraz archiwum tymczasowego (temp.zip)
+    shutil.rmtree(os.path.join(to_save_docx_path, "temp"))
 except Exception as e:
-    sys.exit(e)
+    sys.exit(f'Błąd kopiowania, edycji, usuwania lub podmieniania danych w plikach: {e}')
+finally:
+    # Usunięcie zbędnego pliku xml
+    if os.path.exists(os.path.join(to_save_docx_path, "temp", "word", xml_bad)):
+        os.remove(os.path.join(to_save_docx_path, "temp", "word", xml_bad))
 
-#input("Press Enter to continue...")
-#os.system('python3 ' + cwd + sys_id + 'changer.py ' + cwd + ' ' + sys_id + ' ' + school_folder_name + ' ' + xml_good + ' ' + xml_bad)
+    # Usuwamy zbędne już archiwum .zip
+    if os.path.exists(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip"))):
+        os.remove(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")))
 
-#Usunięcie zbędnego pliku xml
-os.remove(os.path.join(to_save_docx_path, "temp", "word", xml_bad))
-
-#Zwijamy plik tymczasowy (temp) do archiwum .zip z nową nazwą (new_docx_name)
-shutil.make_archive(
-    os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", "")),
-    "zip",
-    os.path.join(to_save_docx_path, "temp"))
-#Kopiujemy nowe archiwum .zip i zmieniamy format archiwum z .zip na .docx
-shutil.copy(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")),
-            os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:]))
-#Usuwamy zbędne już archiwum .zip
-os.remove(os.path.join(to_save_docx_path, docx_file_path[docx_file_path.rfind(sys_id) + 1:].replace(".docx", ".zip")))
-#Usunięcie całego wypakowanego folderu tymczasowego (temp/*) oraz archiwum tymczasowego (temp.zip)
-shutil.rmtree(os.path.join(to_save_docx_path, "temp"))
-
-#TODO TO DELETE Sprawdzić czy to w ogóle jest/było potrzebne!!!
-#os.remove(cwd + sys_id + school_folder_name + sys_id + school_folder_name + sys_id + 'temp.zip')
-
-print('\nEnd, danke schón!')
-
-sys.exit(0)
+    # Usunięcie całego wypakowanego folderu tymczasowego (temp/*) oraz archiwum tymczasowego (temp.zip)
+    if os.path.exists(os.path.join(to_save_docx_path, "temp")):
+        shutil.rmtree(os.path.join(to_save_docx_path, "temp"))
