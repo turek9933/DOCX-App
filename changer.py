@@ -12,7 +12,7 @@ def lets_search(xml_good, xml_bad, word_to_find, word_to_put):
     #Otwieramy plik .xml do przeszukania (xml_bad) i szukamy kolejnych luk do zastąpienia
     with fileinput.FileInput(files = (os.path.join(to_save_docx_path, "temp", "word", xml_bad)), encoding = names.detect_encoding(os.path.join(to_save_docx_path, "temp", "word", xml_bad))) as f_xml_read:
         #Otwieramy plik .xml w folderze do nadpisania go nowymi danymi 
-        with open(os.path.join(to_save_docx_path, "temp", "word", xml_good), 'w', encoding = names.detect_encoding(os.path.join(to_save_docx_path, "temp", "word", xml_good))) as f_xml_write:
+        with open(os.path.join(to_save_docx_path, "temp", "word", xml_good), 'w', encoding = 'utf-8') as f_xml_write:
             #Przechodimy przez linie pliku (xml_bad), szukając kolejnych słów do zastąpienia je kolejnymi danymi
             #Tak zastąpionymi liniami nadpisujemy plik w folderze tymczasowym 
             for line in f_xml_read:

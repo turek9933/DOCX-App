@@ -3,3 +3,4 @@
 {kajto};;;Kajetan Zając
 {alfabet_pl};;;AĄBĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż
 {digits_pl};;;0123456789
+{title};;;Regulation-Making Framework
